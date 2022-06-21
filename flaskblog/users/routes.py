@@ -1,7 +1,7 @@
 #from crypt import methods
 from operator import methodcaller
 from re import sub
-from turtle import update
+#from turtle import update
 from flask import render_template, url_for, flash, redirect, request, Blueprint, session, make_response
 from flask_login import login_user, current_user, logout_user, login_required
 from flaskblog import db, bcrypt
