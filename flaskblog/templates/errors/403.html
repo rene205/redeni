@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div class="container-lg mt-4">
+        <h1>Entschuldigung</h1>
+        <h3>Sie haben keine Berechtigung um auf diese Seite zuzugreifen. (403)</h3>
+        <p>Bitte nutzen Sie die Suchfunktion oder gehen Sie direkt zu <a class="ml-2" href="{{ url_for('main.home') }}">REDENI.de</a></p>
+        <img src="{{url_for('static', filename='Katze3.jpg')}}" class="img-fluid">
+    </div>
+{% endblock content %}
