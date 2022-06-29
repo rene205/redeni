@@ -1,3 +1,6 @@
+#--------------Bearbeitet von René Aumann--------------#
+
+
 from flask import (render_template, url_for, flash,
                    redirect, request, abort, Blueprint)
 from flask_login import current_user, login_required
@@ -8,7 +11,7 @@ from flaskblog.posts.forms import PostForm
 posts = Blueprint('posts', __name__)
 
 
-#-----------------------------------Route zum Erstellen eines Kommentares  ------------------------------------------
+#-----------------------------------Route zum Erstellen eines Kommentares  -----------------------------------------------------------
 @posts.route("/post/new", methods=['GET', 'POST'])
 #Die Seite kann nur aufgerufen werden, wenn ein User eingeloggt ist
 @login_required
@@ -22,17 +25,21 @@ def new_post():
         flash('Dein Kommentar wurde veröffentlicht', 'success')
         return redirect(url_for('main.home'))
     return render_template('create_post.html', title='Neuer Kommentar', form=form, legend='Neuer Kommentar')
+#-------------------------------------------------------------------------------------------------------------------------------------
 
 
-#----------------------------------Route für einen spezifischen Kommentar  ------------------------------------------
+#----------------------------------Route für einen spezifischen Kommentar  -----------------------------------------------------------
 @posts.route("/post/<int:post_id>")
 def post(post_id):
+    #Eine Seite, wo nur der Kommentar angezeigt wird auf den geklickt wurde, wird angezeigt
     post = Post.query.get_or_404(post_id)
     return render_template('post.html', title=post.title, post=post)
+#-------------------------------------------------------------------------------------------------------------------------------------
 
 
-#-----------------------------------Route zum Aktualisieren eines spezifischen Kommentares  ------------------------------------------
+#-----------------------------------Route zum Aktualisieren eines spezifischen Kommentares--------------------------------------------
 @posts.route("/post/<int:post_id>/update", methods=['GET', 'POST'])
+#Um auf die Seite zugreifen zukönnen, muss ein Benutzer angemeldet sein
 @login_required
 def update_post(post_id):
     post = Post.query.get_or_404(post_id)
@@ -40,7 +47,7 @@ def update_post(post_id):
     if post.author != current_user:
         abort(403)
     form = PostForm()
-    #Auf der Update-Seite werden der zuvor gespeicherte Titel und die BEschreibung angezeigt
+    #Auf der Update-Seite werden der zuvor gespeicherte Titel und die Beschreibung angezeigt
     #Bei einer Aktualisierung wird die Datenbank überschrieben 
     if form.validate_on_submit():
         post.title = form.title.data
@@ -49,13 +56,16 @@ def update_post(post_id):
         flash('Der Kommentar wurde aktualisiert!', 'success')
         return redirect(url_for('posts.post', post_id=post.id))
     elif request.method == 'GET':
+        #Der vorher gespeicherte Titel und der Kommentar werden hiermit in den Formularfelder angezeigt
         form.title.data = post.title
         form.content.data = post.content
     return render_template('create_post.html', title='Kommentar aktualisieren', form=form, legend='Kommentar aktualisieren')
+#-------------------------------------------------------------------------------------------------------------------------------------
 
 
-#-----------------------------------Route zum Löschen eines spezifischen Kommentares  ------------------------------------------
+#-----------------------------------Route zum Löschen eines spezifischen Kommentares  ------------------------------------------------
 @posts.route("/post/<int:post_id>/delete", methods=['POST'])
+#Um auf die Seite zugreifen zukönnen, muss ein Benutzer angemeldet sein
 @login_required
 def delete_post(post_id):
     post = Post.query.get_or_404(post_id)
@@ -67,3 +77,4 @@ def delete_post(post_id):
     db.session.commit()
     flash('Der Kommentar wurde erfolgreich gelöscht!', 'success')
     return redirect(url_for('main.home'))
+#-------------------------------------------------------------------------------------------------------------------------------------

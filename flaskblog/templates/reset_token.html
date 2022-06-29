@@ -1,13 +1,16 @@
+<!----------------Bearbeitet von René Aumann---------------->
+
 {% extends "layout.html" %}
 {% block content %}
 
-
+<!--Auf diese Seite kommt man nur mit dem Reset-Schlüssel, welchen man per Email nach erfolgreichem zurücksetzen erhalten wird-->
 <div class="container-lg">
     {% include '_messages.html' %}
     <div class="content-section">
         <form method="POST" action="">
             {{ form.hidden_tag() }}
             <fieldset class="form-group">
+                <!--In diesem Formular ist es möglich ein neues Passwort für das Konto zu speichern-->
                 <legend class="border-bottom mb-4">Reset Password</legend>
                 <div class="form-group">
                     {{ form.password.label(class="form-control-label") }}

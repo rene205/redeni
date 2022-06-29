@@ -1,16 +1,12 @@
+#--------------Bearbeitet von René Aumann--------------#
+
 import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_mail import Mail
-#pip install flask-msearch
 from flask_msearch import Search
-#pip install flask-migrate
-#from flask_migrate import Migrate
-
-
-
 from flask_uploads import IMAGES, UploadSet, configure_uploads
 import os
 
@@ -31,16 +27,15 @@ bcrypt = Bcrypt(app)
 search = Search()
 search.init_app(app)
 
-#migrate = Migrate(app, db)
-#with app.app_context():
-    #if db.engine.url.drivername == "sqlite":
-        #migrate.init_app(app, db, render_as_batch=True)
-    #else:
-        #migrate.init_app(app, db)
-
+#-----------------------------------------------Login Manager----------------------------------------------------------
 login_manager = LoginManager(app)
 login_manager.login_view = 'users.login'
 login_manager.login_message_category = 'info'
+#----------------------------------------------------------------------------------------------------------------------
+
+
+#---------------------------------------------------Der Mailserver initialisieren-------------------------------------
+#Der Mailserver zum verschicken der Email zum Passwort zurücksetzen wird definiert
 app.config['MAIL_SERVER']='smtp.mailtrap.io'
 app.config['MAIL_PORT']= 2525
 app.config['MAIL_USE_TLS']= True
@@ -48,7 +43,10 @@ app.config['MAIL_USE_SSL'] = False
 app.config['MAIL_USERNAME']= 'a4a8fd30b81c14'
 app.config['MAIL_PASSWORD']= '9dc17298bf83bd'
 mail = Mail(app)
+#----------------------------------------------------------------------------------------------------------------------
 
+
+#---------------------------------------------------Blueprints werden definiert----------------------------------------
 from flaskblog.items.routes import items
 from flaskblog.users.routes import users
 from flaskblog.posts.routes import posts
@@ -66,5 +64,5 @@ app.register_blueprint(footer)
 app.register_blueprint(items)
 app.register_blueprint(cart)
 app.register_blueprint(errors)
-
+#----------------------------------------------------------------------------------------------------------------------
 

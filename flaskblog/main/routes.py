@@ -1,3 +1,6 @@
+#--------------Bearbeitet von René Aumann--------------#
+
+
 from flask import render_template, request, Blueprint
 from flaskblog.models import Post, Addproduct
 

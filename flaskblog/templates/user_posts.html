@@ -1,12 +1,18 @@
+<!----------------Bearbeitet von René Aumann---------------->
+
 {% extends "layout.html" %}
 {% block content %}
+
+<!--Auf dieser Seite werden alle Kommentare von einem Benutzer angezeigt-->
 <div class="container-lg mt-4">
     <h1 class="mb-3">Kommentare von {{ user.username }} ({{ posts.total }})</h1>
+    <!--An dieser Stelle werden alle Kommentare die von einem bestimmten Benutzer erstellt wurden herausgesucht-->
     {% for post in posts.items %}
         <article class="media content-section">
           <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}">
           <div class="media-body">
             <div class="article-metadata">
+              <!--Hier wird das Aussehen und der Inhalt der Posts definiert, wie auf den anderen Seiten-->
               <a class="mr-2" href="{{ url_for('users.user_posts', username=post.author.username) }}">{{ post.author.username }}</a>
               <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
             </div>
@@ -15,6 +21,7 @@
           </div>
         </article>
     {% endfor %}
+    <!--An dieser Stelle werden die Seiten für die Kommentare definiert. In der routes.py wird hierbei definiert, wie viele Posts auf einer Seite angezeigt werden-->
     {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
       {% if page_num %}
         {% if posts.page == page_num %}

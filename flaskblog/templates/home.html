@@ -1,12 +1,18 @@
+<!----------------Bearbeitet von René Aumann, Dennis Müller, Nikos Papaspiros---------------->
+
 {% extends "layout.html" %}
 {% block content %}
 
+<!--Zeigt die Startseite der Website an-->
 <div class="container-lg mt-4 d-none d-md-block">
+  <!--Hierdruch werden die flash Nachrichten auf der Startseite angezeigt-->
   {% include '_messages.html' %}
     <div class="pb-4">
       <h1>Angebote</h1>
+      <!--Ab hier wird ein Carousel für die Angebote auf der Startseite erstellt-->
     <div id="carouselExampleIndicators" class="carousel carousel-dark slide" data-bs-ride="carousel">
       <div class="carousel-indicators">
+        <!--Das Carousel soll drei Slides haben-->
         <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
         <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
         <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
@@ -14,10 +20,12 @@
       <div class="carousel-inner">
         <div class="carousel-item active ">
           <div class="row distance3">
+            <!--Da auf jedem Slide 2 Artikel angezeigt werden laufen die folgenden "for-Schleifen" immer zwei mal durch-->
             {% for product in range(2) %}
             <div class="col d-flex distance3">
               <div class="card shadow-sm flex-fill">
                   <div class="card-title flex-fill m-3 ">
+                    <!--In der routes.py im ordner main wurde eine Liste mit 6 Produkten erstellt , die Im Angebot sind-->
                       <p class="h5"> {{ carouselproducts[product].name }} </p>
                       
                   </div>
@@ -27,16 +35,19 @@
                       </a>
                   </div>
                   <div class="card-body distance4">
+                      <!--Da diese Textabschnitt auch für andere Artikel-Kacheln benutzt wurde, wird hier nochmal geprüft, ob es sich um ein Angebots-Artikel handelt oder nicht-->
                       {% if carouselproducts[product].discount > 0 %}
+                        <!--Wenn der Artikel im Angebot ist, wird der eigentliche Preis durchgestrichen und der rabbatierte Preis in rot angezeigt-->
                           <small class="text-muted"><s>{{carouselproducts[product].price}}€</s></small>
                           <small class="text-danger">- {{carouselproducts[product].discount}}% &nbsp;</small>
                           <small class="text-danger">{{'%0.2f' | format(carouselproducts[product].price|float - (carouselproducts[product].price|float * (carouselproducts[product].discount|float/100)))}}€</small>
                                         
                       <!--p style="text-shadow: 1px 1px 2px #000; color: #F00; position:absolute; top: 3%; right: 10%; font-size: x-large;">%</p-->
                       {% else %}
+                        <!--Wenn der Artikel nicht im Angebot ist, wird der Preis nur normal angezeigt.-->
                         <small class="text-muted">{{carouselproducts[product].price}}€</small>
                       {% endif %}
-
+                      <!--In diesem Abschnitt werden noch die Buttons der Kacheln hinzugefügt-->
                       <div class="mt-2">
                               <a href="{{url_for('items.single_page', id=carouselproducts[product].id)}}" class="float-left btn btn-sm btn-outline-secondary">Anzeigen</a>
                               <form action="{{url_for('cart.AddCart')}}" method="POST">
@@ -58,8 +69,10 @@
             {% endfor %}
           </div>
         </div>
+        <!--Ab hier beginnt die zweite Slide Seite des Carousels-->
         <div class="carousel-item ">
           <div class="row distance3">
+            <!--Diese Slide Seite zeigt nicht mehr die ersten beiden Produkte aus der Liste "Carouselproducts", sondern die Produkte 3 und 4-->
             {% for product in range(3,5) %}
             <div class="col d-flex distance3">
               <div class="card shadow-sm flex-fill">
@@ -103,6 +116,7 @@
             {% endfor %}
           </div>
         </div>
+        <!--Ab hier beginnt die dritte Slide Seite des Carousels-->
         <div class="carousel-item ">
           <div class="row distance3">
             {% for product in range(5,7) %}
@@ -150,6 +164,7 @@
           </div>
         </div>
       </div>
+      <!--Hier werden noch die Navigationspfeile zum Carousel hinzugefügt-->
       <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Previous</span>
@@ -163,16 +178,17 @@
 </div>
 
 
-<!--Carousel wenn Container sm erreicht wird-->
+<!--Carousel wenn Container sm erreicht wird (für die mobile Ansicht)-->
+<!--Bis auf die Verwendung von einigen anderen Bootstrap Klassen, ist dieses Carousel identisch zum oberen Carousel aufgebaut-->
 <div class="container-lg mt-4 d-block d-md-none">
   {% include '_messages.html' %}
     <div class="pb-4">
       <h1>Angebote</h1>
-    <div id="carouselExampleIndicators" class="carousel carousel-dark slide" data-bs-ride="carousel">
+    <div id="carouselExampleIndicators2" class="carousel carousel-dark slide" data-bs-ride="carousel">
       <div class="carousel-indicators">
-        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators2" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators2" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators2" data-bs-slide-to="2" aria-label="Slide 3"></button>
       </div>
       <div class="carousel-inner">
         <div class="carousel-item active ">
@@ -189,7 +205,7 @@
                           <img class="img-fluid" src="{{url_for('static', filename='product_pics/' + carouselproducts[product].image_1)}}" alt="{{product.name}}" style="max-height: 300px;">
                       </a>
                   </div>
-                  <div class="card-body distance4">
+                  <div class="card-body text-shadow">
                       {% if carouselproducts[product].discount > 0 %}
                           <small class="text-muted"><s>{{carouselproducts[product].price}}€</s></small>
                           <small class="text-danger">- {{carouselproducts[product].discount}}% &nbsp;</small>
@@ -235,7 +251,7 @@
                           <img class="img-fluid" src="{{url_for('static', filename='product_pics/' + carouselproducts[product].image_1)}}" alt="{{product.name}}" style="max-height: 300px;">
                       </a>
                   </div>
-                  <div class="card-body distance4">
+                  <div class="card-body text-shadow">
                       {% if carouselproducts[product].discount > 0 %}
                       <small class="text-muted"><s>{{carouselproducts[product].price}}€</s></small>
                       <small class="text-danger">- {{carouselproducts[product].discount}}% &nbsp;</small>
@@ -280,7 +296,7 @@
                           <img class="img-fluid" src="{{url_for('static', filename='product_pics/' + carouselproducts[product].image_1)}}" alt="{{product.name}}" style="max-height: 300px;">
                       </a>
                   </div>
-                  <div class="card-body distance4">
+                  <div class="card-body text-shadow">
                       
                       {% if carouselproducts[product].discount > 0 %}
                           <small class="text-muted"><s>{{carouselproducts[product].price}}€</s></small>
@@ -313,11 +329,11 @@
           </div>
         </div>
       </div>
-      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators2" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Previous</span>
       </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators2" data-bs-slide="next">
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Next</span>
       </button>
@@ -325,11 +341,12 @@
   </div>
 </div>
 
-
+<!--Ab hier werden die vier neusten Artikel hinzugefügt-->
 <div class="container-lg">
   <div class="pb-4">
     <h1>Neuerscheinungen</h1>
   <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-3">
+                    <!--Diese Schleife durchläuft eine Liste, die die letzten Produkte enthält die zur Datenbank hinzugefügt wurden-->
                     {% for product in products %}
                         <div class="col d-flex">
                             <div class="card shadow-sm flex-fill">

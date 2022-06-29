@@ -1,3 +1,5 @@
+#--------------Bearbeitet von Nikos Papaspiros, Dennis Müller & René Aumann--------------#
+
 from datetime import datetime
 from email.policy import default
 from sre_parse import State
@@ -7,12 +9,14 @@ from flask_login import UserMixin
 import json
 
 
-
+#---------------------------------------------------Login Manager----------------------------------------------------------------------------
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+#--------------------------------------------------------------------------------------------------------------------------------------------
 
 
+#---------------------------------------------------Datenbank, in der die User gespeichert werden.-------------------------------------------
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     firstname = db.Column(db.String(20), unique=False)
@@ -46,8 +50,10 @@ class User(db.Model, UserMixin):
 
     def __repr__(self):
         return f"User('{self.username}', '{self.email}', '{self.image_file}')"
+#--------------------------------------------------------------------------------------------------------------------------------------------
 
 
+#---------------------------------------------------Datenbank, in der die Kommentare der Nutzter gespeichert werden.-------------------------
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
@@ -57,8 +63,10 @@ class Post(db.Model):
 
     def __repr__(self):
         return f"Post('{self.title}', '{self.date_posted}')"
+#--------------------------------------------------------------------------------------------------------------------------------------------
 
-#------------------------------------------
+
+#---------------------------------------------------Datenbank, in der die Produkte gespeichert werden.---------------------------------------
 class Addproduct(db.Model):
     __searchable__ = ['name', 'desc']
     id = db.Column(db.Integer, primary_key=True)
@@ -82,17 +90,24 @@ class Addproduct(db.Model):
 
     def __repr__(self):
         return '<Addproduct %r>' % self.name
-#------------------------------------------
+#--------------------------------------------------------------------------------------------------------------------------------------------
 
-# Datenbank für Marke und Kategorie
+
+#---------------------------------------------------Datenbank in der die Marken gespeichert werden-------------------------------------------
 class Brand(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30), nullable=False, unique=True)
+#--------------------------------------------------------------------------------------------------------------------------------------------
 
 
+#---------------------------------------------------Datenbank in der die Kategorien gespeichert werden---------------------------------------
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30), nullable=False, unique=True)
+#--------------------------------------------------------------------------------------------------------------------------------------------
+
+
+#-----------------------------Diese Klasse ist für das korrekte Einfügen der Bestellungen in die Datenbank.----------------------------------
 
 class JsonEncodedDict(db.TypeDecorator):
     impl = db.Text
@@ -108,8 +123,10 @@ class JsonEncodedDict(db.TypeDecorator):
             return {}
         else:
             return json.loads(value)
+#--------------------------------------------------------------------------------------------------------------------------------------------
 
 
+#-------------------------------------------Datenbank in der die Kundenbestellungen gespeichert werden---------------------------------------
 class CustomerOrder(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     invoice = db.Column(db.String(20), unique=True, nullable=False)
@@ -120,5 +137,7 @@ class CustomerOrder(db.Model):
 
     def __repr__(self):
         return '<CustomerOrder %r>' % self.invoice
+#--------------------------------------------------------------------------------------------------------------------------------------------
+
 
 db.create_all()

@@ -1,3 +1,5 @@
+#--------------Bearbeitet von Dennis Müller--------------#
+
 #---------------------------------------------------Verbinden zweier Dictionarys----------------------------------------------
 #Die Funktion wird verwendet, um ein weiteres Produkt zu einem bestehenden Warenkorb hinzuzufügen.
 #"dict1" entspricht der Session, die übergeben wird und "dict2" ist das neue Produkt.

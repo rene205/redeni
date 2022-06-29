@@ -1,32 +1,36 @@
+<!----------------Bearbeitet von René Aumann---------------->
+
 {% extends "layout.html" %}
 {% block content %}
 
-<!-- Hiermit werden alle Flash Messages auf der Seite aufgerufen. Eine näher Definition befindet sich in der Datei "routes"-->
-
-
+<!--Diese Seiten zeigt einen spezifischen Kommentar eines Users an-->
 <div class="container-lg">
     {% include '_messages.html' %}
     <article class="media content-section row">
     <img class="rounded-circle article-img col" style="max-width: 100px;" src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}">
     <div class="media-body col">
         <div class="article-metadata">
+            <!--Benutzername, Datum und Uhrzeit des Posts werden angezeigt-->
             <a class="mr-2" href="{{ url_for('users.user_posts', username=post.author.username) }}">{{ post.author.username }}</a>
             <small class="text-muted">{{ post.date_posted.strftime('%d.%m.%Y %H:%M') }}</small>
+            <!--Nur wenn der User angemeldet ist, der den Kommentar erstellt hat, werden die Button zum aktualisieren und Löschen des Posts angezeigt-->
             {% if post.author == current_user %}
             <div>
                 <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('posts.update_post', post_id=post.id) }}">Aktualisieren</a>
                 <button type="button" class="btn btn-danger btn-sm m-1" data-bs-toggle="modal" data-bs-target="#deleteModal">Löschen</button>
             </div>
             {% endif %}
+        <!--Titel und Inhalt des Posts werden angezeigt-->
         </div>
           <h2 class="article-title">{{ post.title }}</h2>
           <p class="article-content">{{ post.content }}</p>
     </div>
     </article>
-    <!-- Modal -->
+    <!--Ab hier wird ein Modal erstellt, welches zum bestätigen des Löschen des Kommentar angezeigt wird-->
     <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
+        <!--Hier wird definiert, was genau in dem Pop up Fenster angezeigt werden soll-->
         <div class="modal-header">
             <h5 class="modal-title" id="deleteModalLabel">Kommentar löschen?</h5>
             <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">

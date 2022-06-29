@@ -1,16 +1,12 @@
-#from crypt import methods
-from operator import methodcaller
-from re import sub
-#from turtle import update
-from flask import render_template, url_for, flash, redirect, request, Blueprint, session, make_response
+#--------------Bearbeitet von Dennis Müller & René Aumann (nähere Infos, siehe unten)--------------#
+
+from flask import render_template, url_for, flash, redirect, request, Blueprint, session
 from flask_login import login_user, current_user, logout_user, login_required
 from flaskblog import db, bcrypt
 from flaskblog.models import User, Post, CustomerOrder, Addproduct
 from flaskblog.users.forms import (RegistrationForm, LoginForm, UpdateAccountForm,RequestResetForm, ResetPasswordForm)
 from flaskblog.users.utils import save_picture, send_reset_email
 import secrets
-#pip install pdfkit
-import pdfkit
 import stripe
 
 #Die beiden Keys werden benötigt, um Zahlungen über Stripe abzuwickeln. 
@@ -20,16 +16,24 @@ stripe.api_key= 'sk_test_51L9UNpJhnXbsS5VrT34iWSPZfZgvdxUCOfOkEM6Grqzm4ERjlOZqvv
 
 users = Blueprint('users', __name__)
 
+#--------------Bearbeitet von René Aumann--------------#
 #---------------------------------------------------Benutzerregistrierung--------------------------------------------------------------------
 @users.route("/register", methods=['GET', 'POST'])
 def register():
+    #Wenn ein Benutzer, der bereits eingeloggt ist, auf die Registrierungsseite möchte, wird er direkt wieder 
+    #zur Startseite geleitet
     if current_user.is_authenticated:
         return redirect(url_for('main.home'))
-    #Ruft das Formular zur Benutzerregistrierung auf
+    #Importiert das Formular zur Benutzerregistrierung auf
     form = RegistrationForm()
+    #Die eingegebenen Daten werden, nachdem auf "Registrieren" gedrückt wird, der Datenbank hinzugefügt
     if form.validate_on_submit():
+        #Das Passwort wird nicht, wie die anderen Daten, sichtbar in die Datenbank geschrieben. 
+        #An dieser Stelle wird das Passwort verschlüsselt.
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user = User(firstname=form.firstname.data,lastname=form.lastname.data,username=form.username.data, email=form.email.data, password=hashed_password, country=form.country.data, state=form.state.data, city = form.city.data, contact = form.contact.data, address = form.address.data, zipcode = form.zipcode.data)
+        user = User(firstname=form.firstname.data,lastname=form.lastname.data,username=form.username.data, 
+        email=form.email.data, password=hashed_password, country=form.country.data, state=form.state.data, 
+        city = form.city.data, contact = form.contact.data, address = form.address.data, zipcode = form.zipcode.data)
         db.session.add(user)
         db.session.commit()
         flash('Das Konto wurde erstellt. Sie können sich jetzt einloggen.', "success")
@@ -38,14 +42,19 @@ def register():
 #--------------------------------------------------------------------------------------------------------------------------------------------  
 
 
+#--------------Bearbeitet von René Aumann--------------#
 #---------------------------------------------------User Login-------------------------------------------------------------------------------
 @users.route("/login", methods=['GET', 'POST'])
 def login():
+    #Wenn ein Benutzer, der bereits eingeloggt ist, auf die Registrierungsseite möchte, wird er direkt wieder zur Startseite geleitet
     if current_user.is_authenticated:
         return redirect(url_for('main.home'))
+    #Importiert das Formular zur Anmeldung
     form = LoginForm()
+    #Nachdem "Anmelden" geklickt wurde, wird geprüft, ob die E-Mail in der Datenbank steht und ob das dazugehörige Passwort korrekt eingegeben wurde
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
+        #Wenn E-Mail und Passwort korrekt sind, wird der Benutzer angemeldet und erfolgreich weitergeleitet
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
@@ -64,6 +73,7 @@ def login():
 #--------------------------------------------------------------------------------------------------------------------------------------------  
 
 
+#--------------Bearbeitet von René Aumann--------------#
 #---------------------------------------------------User Logout------------------------------------------------------------------------------
 @users.route("/Ausloggen")
 def logout():
@@ -73,15 +83,18 @@ def logout():
 #--------------------------------------------------------------------------------------------------------------------------------------------  
 
 
+#--------------Bearbeitet von René Aumann--------------#
 #---------------------------------------------------Anzeigen der Kontoübersicht--------------------------------------------------------------
 @users.route("/account", methods=['GET', 'POST'])
 @login_required
 def account():
+    #Importiert das Formular zum Aktualisieren der Benutzerdaten
     form = UpdateAccountForm()
     if form.validate_on_submit():
         if form.picture.data:
             picture_file = save_picture(form.picture.data)
             current_user.image_file = picture_file
+        #Falls ein Feld im Formular geändert wurde, werden diese Daten aktualisiert
         current_user.firstname = form.firstname.data
         current_user.lastname = form.lastname.data
         current_user.username = form.username.data
@@ -96,6 +109,7 @@ def account():
         flash('Ihr Konto wurde erfolgreich aktualisiert!', 'success')
         return redirect(url_for('users.account'))
     elif request.method == 'GET':
+        #Die aktuellen Benutzerdaten stehen in den passenden Felder im Formular
         form.firstname.data = current_user.firstname
         form.lastname.data = current_user.lastname
         form.username.data = current_user.username
@@ -106,28 +120,35 @@ def account():
         form.contact.data = current_user.contact
         form.address.data = current_user.address
         form.zipcode.data = current_user.zipcode
-    # Image file Variable, die auf das richtige Bild berweisen wird
+    # Image file Variable, die auf das richtige Bild verweisen wird
     image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
     return render_template('account.html', title='Account', image_file = image_file, form=form)
 #--------------------------------------------------------------------------------------------------------------------------------------------  
 
 
+#--------------Bearbeitet von René Aumann--------------#
 #---------------------------------------------------User Posts-------------------------------------------------------------------------------
 @users.route("/user/<string:username>")
 def user_posts(username):
     page = request.args.get('page', 1, type=int)
+    #Es werden hierdurch alle Kommentare des Users (der angemeldet ist) herausgefiltert.
     user = User.query.filter_by(username=username).first_or_404()
+    #Es werden dabei vier Kommentare auf einer Seite angezeigt. Der letzte Kommentar wird ganz oben auf der ersten Seite angezeigt.
     posts = Post.query.filter_by(author=user).order_by(Post.date_posted.desc()).paginate(page=page, per_page=4)
     return render_template("user_posts.html", posts=posts, user=user)
 #--------------------------------------------------------------------------------------------------------------------------------------------  
 
 
+#--------------Bearbeitet von René Aumann--------------#
 #---------------------------------------------------Passwort zurücksetzen--------------------------------------------------------------------
 @users.route("/passwort_zurücksetzen", methods=['GET', 'POST'])
 def reset_request():
+    #Wenn ein Benutzer, der bereits eingeloggt ist, auf die Registrierungsseite möchte, wird er direkt wieder zur Startseite geleitet
     if current_user.is_authenticated:
         return redirect(url_for('main.home'))
+    #Importiert das Formular zum Zurücksetzen des Passworts
     form = RequestResetForm()
+    #Nach dem eingeben der richtigen E-Mail und klicken auf Zurücksetzen, wird eine E-Mail zum zurücksetzen des Passwortes an die E-Mail des Benutzers geschickt
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         send_reset_email(user)
@@ -137,17 +158,23 @@ def reset_request():
 #--------------------------------------------------------------------------------------------------------------------------------------------  
 
 
+#--------------Bearbeitet von René Aumann--------------#
 #---------------------------------------------------Reset Token für Passwort zurücksetzen----------------------------------------------------
 @users.route("/passwort_zurücksetzen/<token>", methods=['GET', 'POST'])
 def reset_token(token):
+    #Wenn ein Benutzer, der bereits eingeloggt ist, auf die Registrierungsseite möchte, wird er direkt wieder zur Startseite geleitet
         if current_user.is_authenticated:
             return redirect(url_for('main.home'))
+        #Der Schlüssel, mit welcher der Link in der "E-Mail zurücksetzen Mail" auftaucht wird geprüft und validiert
         user = User.verify_reset_token(token)
+        #Ist der Schlüssel falsch oder schon abgelaufen, kommt eine Fehlermeldung
         if user is None:
             flash('Es handelt sich um einen ungültigen Schlüssel', 'warning')
             return redirect(url_for('users.reset_request'))
+        #Importiert das Formular zum eingeben eines neuen Passworts
         form = ResetPasswordForm()
         if form.validate_on_submit():
+            #Das Passwort wird wieder verschlüsselt und auf der Datenbank aktualisiert
             hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
             user.password = hashed_password
             db.session.commit()
@@ -156,7 +183,7 @@ def reset_token(token):
         return render_template ('reset_token.html', title='Passwort zurücksetzen', form=form)
 #--------------------------------------------------------------------------------------------------------------------------------------------  
 
-
+#--------------Bearbeitet von Dennis Müller--------------#
 #---------------------------------------------------Anzeigen der Bestellübersicht------------------------------------------------------------
 @users.route("/orders", methods=["POST"])
 #Der Benutzer muss eingeloggt sein, um die Seite zu sehen.
@@ -187,6 +214,7 @@ def orders():
 #--------------------------------------------------------------------------------------------------------------------------------------------  
 
 
+#--------------Bearbeitet von Dennis Müller--------------#
 #---------------------------------------------------Kartenzahlung mit Stripe-----------------------------------------------------------------
 @users.route('/payment', methods =['POST'])
 #Der Benutzer muss eingeloggt sein, um die Seite zu sehen.
@@ -239,6 +267,7 @@ def payment():
 #--------------------------------------------------------------------------------------------------------------------------------------------  
 
 
+#--------------Bearbeitet von Dennis Müller--------------#
 #---------------------------------------------------Thank-You Page---------------------------------------------------------------------------
 @users.route('/thanks/<invoice>', methods=["POST"])
 #Die Rechnungsnummer wird von der Zahlungsabwicklung an die thanks-Methode übergeben. 
@@ -267,6 +296,7 @@ def thanks(invoice):
 #--------------------------------------------------------------------------------------------------------------------------------------------  
 
 
+#--------------Bearbeitet von Dennis Müller--------------#
 #---------------------------------------------------Anzeigen der Bestellhistorie-------------------------------------------------------------
 @users.route("/orderhistory")
 #Der Benutzer muss eingeloggt sein, um die Seite zu sehen.
@@ -285,6 +315,7 @@ def orderhistory():
 #--------------------------------------------------------------------------------------------------------------------------------------------  
 
 
+#--------------Bearbeitet von Dennis Müller--------------#
 #---------------------------------------------------Anzeigen einer Bestellung, wenn aus Bestellhistorie aufgerufen---------------------------
 @users.route("/showorder/<invoice>")
 #Der Benutzer muss eingeloggt sein, um die Seite zu sehen.

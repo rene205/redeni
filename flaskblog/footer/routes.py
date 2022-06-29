@@ -1,3 +1,5 @@
+#--------------Bearbeitet von Nikos Papaspiros--------------#
+
 from flask import render_template, Blueprint
 
 footer = Blueprint('footer', __name__)

@@ -1,12 +1,8 @@
+#--------------Bearbeitet von Dennis Müller--------------#
+
 #from crypt import methods
-import os
-import secrets
-from shutil import ExecError
-from statistics import quantiles
-from flask import render_template, request, Blueprint, flash, redirect, url_for, current_app, session
-from flaskblog import db,photos, app
-from flaskblog.models import Brand, Category, Addproduct
-from flaskblog.admin.forms import AddProducts
+from flask import render_template, request, Blueprint, flash, redirect, url_for, session
+from flaskblog.models import Addproduct
 from flaskblog.admin.utils import MagerDicts
 from  sqlalchemy.sql.expression import func
 

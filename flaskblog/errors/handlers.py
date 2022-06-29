@@ -1,3 +1,6 @@
+#--------------Bearbeitet von Nikos Papaspiros--------------#
+
+
 from flask import Blueprint, render_template
 
 errors = Blueprint('errors', __name__)
@@ -20,3 +23,4 @@ def error_500(error):
 @errors.app_errorhandler(405)
 def error_405(error):
     return render_template('errors/405.html'), 405
+#------------------------------------------------------------------------------------------------------------------

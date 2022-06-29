@@ -1,10 +1,11 @@
+#--------------Bearbeitet von Dennis Müller--------------#
+
 import os
 import secrets
-from flask import render_template, request, Blueprint, flash, redirect, url_for, current_app, session
+from flask import render_template, request, Blueprint, flash, redirect, url_for, current_app
 from flaskblog import db,photos, app
 from flaskblog.models import Brand, Category, Addproduct
 from flaskblog.admin.forms import AddProducts
-from flaskblog.admin.utils import MagerDicts
 from flask_login import login_required, current_user
 
 admin = Blueprint('admin', __name__)
@@ -407,35 +408,6 @@ def deleteproduct(id):
 #-----------------------------------------------------------------------------------------------------------------------------  
 
 
-
-
-
-
-
-#---------------------------------------------------Kategorien anzeigen (Nutzeransicht)---------------------------------------
-@admin.route('/category/<int:id>')
-def get_category(id):
-    page = request.args.get('page',1, type=int)
-    #Die Kategorie, welche angezeigt werden soll, wird anhand der ID aus der Datenbank abgerufen und in Variable "c" gespeichert. 
-    c = Category.query.filter_by(id=id).first_or_404()
-    #Alle Produkte, die zu der Kategorie gehören, werden aus der Datenbank abgerufen. 
-    category = Addproduct.query.filter_by(category=c).paginate(page=page, per_page=4)
-    #Das Template wird gerendert und "category" und "c" werden übergeben.
-    return render_template('products/products.html', category = category, c=c)
-#-----------------------------------------------------------------------------------------------------------------------------
-    
-
-#---------------------------------------------------Marken anzeigen (Nutzeransicht)-------------------------------------------
-@admin.route('/brand/<int:id>')
-def get_brand(id):
-    page = request.args.get('page',1, type=int)
-    #Die Marke, welche angezeigt werden soll, wird anhand der ID aus der Datenbank abgerufen und in Variable "b" gespeichert. 
-    b = Brand.query.filter_by(id=id).first_or_404()
-    #Alle Produkte, die zu der Marke gehören, werden aus der Datenbank abgerufen. 
-    brand2 = Addproduct.query.filter_by(brand=b).paginate(page=page, per_page=4)
-     #Das Template wird gerendert und "brand2" und "b" werden übergeben.
-    return render_template('products/products.html', brand2 = brand2, b=b)
-#-----------------------------------------------------------------------------------------------------------------------------
 
 
 

@@ -1,3 +1,5 @@
+<!----------------Bearbeitet von Nikos Papaspiros---------------->
+
 {% extends "layout.html" %}
 
 {% block content%}
@@ -65,16 +67,16 @@
             <div class="col text-center">
                 <!--"Vorherige" Button-->
                 {% if category.has_prev %}
-                    <a href="{{url_for('admin.get_category', id=c.id, page=category.prev_num)}}" class="btn btn-outline-steel btn-sm mt-3">Vorherige</a>
+                    <a href="{{url_for('items.get_category', id=c.id, page=category.prev_num)}}" class="btn btn-outline-steel btn-sm mt-3">Vorherige</a>
                 {% endif %}
                 <!--Legt fest, wie die Seitenauswahl angezeigt wird, wenn es über 4 Produktseiten gibt.-->
                 {% if category.total> 4 %}
                     {% for page_num in category.iter_pages(left_edge=1, right_edge=2, left_current=1, right_current=2) %}
                         {% if page_num %}
                             {% if category.page == page_num %}
-                                <a href="{{url_for('admin.get_category', id=c.id, page=page_num)}}" class="btn btn-steel btn-sm mt-3">{{page_num}}</a>
+                                <a href="{{url_for('items.get_category', id=c.id, page=page_num)}}" class="btn btn-steel btn-sm mt-3">{{page_num}}</a>
                             {% else %}
-                                <a href="{{url_for('admin.get_category', id=c.id, page=page_num)}}" class="btn btn-outline-steel btn-sm mt-3">{{page_num}}</a>
+                                <a href="{{url_for('items.get_category', id=c.id, page=page_num)}}" class="btn btn-outline-steel btn-sm mt-3">{{page_num}}</a>
                             {% endif %}
                         {% else %}
                             ...
@@ -83,7 +85,7 @@
                 {% endif %}
                 <!--"Nächste" Button-->
                 {% if category.has_next %}
-                    <a href="{{url_for('admin.get_category', id=c.id, page=category.next_num)}}" class="btn btn-outline-steel btn-sm mt-3">Nächste</a>
+                    <a href="{{url_for('items.get_category', id=c.id, page=category.next_num)}}" class="btn btn-outline-steel btn-sm mt-3">Nächste</a>
                 {% endif %}
             </div>
         </div>
@@ -147,16 +149,16 @@
             <div class="col text-center">
                 <!--"Vorherige" Button-->
                 {% if brand2.has_prev %}
-                    <a href="{{url_for('admin.get_brand', id=b.id, page=brand2.prev_num)}}" class="btn btn-outline-steel btn-sm mt-3">Vorherige</a>
+                    <a href="{{url_for('items.get_brand', id=b.id, page=brand2.prev_num)}}" class="btn btn-outline-steel btn-sm mt-3">Vorherige</a>
                 {% endif %}
                 <!--Legt fest, wie die Seitenauswahl angezeigt wird, wenn es über 4 Produktseiten gibt.-->
                 {% if brand2.total> 4 %}
                     {% for page_num in brand2.iter_pages(left_edge=1, right_edge=2, left_current=1, right_current=2) %}
                         {% if page_num %}
                             {% if brand2.page == page_num %}
-                                <a href="{{url_for('admin.get_brand', id=b.id, page=page_num)}}" class="btn btn-steel btn-sm mt-3">{{page_num}}</a>
+                                <a href="{{url_for('items.get_brand', id=b.id, page=page_num)}}" class="btn btn-steel btn-sm mt-3">{{page_num}}</a>
                             {% else %}
-                                <a href="{{url_for('admin.get_brand', id=b.id, page=page_num)}}" class="btn btn-outline-steel btn-sm mt-3">{{page_num}}</a>
+                                <a href="{{url_for('items.get_brand', id=b.id, page=page_num)}}" class="btn btn-outline-steel btn-sm mt-3">{{page_num}}</a>
                             {% endif %}
                         {% else %}
                             ...
@@ -165,7 +167,7 @@
                 {% endif %}
                 <!--"Nächste" Button-->
                 {% if brand2.has_next %}
-                    <a href="{{url_for('admin.get_brand', id=b.id, page=brand2.next_num)}}" class="btn btn-outline-steel btn-sm mt-3">Nächste</a>
+                    <a href="{{url_for('items.get_brand', id=b.id, page=brand2.next_num)}}" class="btn btn-outline-steel btn-sm mt-3">Nächste</a>
                 {% endif %}
             </div>
         </div>

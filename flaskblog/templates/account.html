@@ -1,12 +1,17 @@
+<!----------------Bearbeitet von René Aumann---------------->
+
 {% extends "layout.html" %}
 {% block content %}
 <div class="container-lg mt-4">
     <h1>Mein Konto</h1>
+    <!--Durch diese Einbindung der "Message.html" werden Flash Nachrichten auf dieser Seite angezeigt-->
     {% include '_messages.html' %}
+    <!--Ab hier wird das Konto des Users angezeigt-->
     <div class="content-section py-4">
       <div class="media row">
         <img class="rounded-circle account-img col" style="max-width: 160px;" src="{{ image_file }}">
         <div class="media-body col">
+        <!--In der Kopfzeile der Seite werden die spezifischen Daten des Users angezeigt-->
           <h2 class="account-heading ">{{ current_user.username }}</h2>
           <div class="text-secondary">{{ current_user.firstname }} {{ current_user.lastname }}</div>
           <div class="text-secondary">{{ current_user.address }}</div>
@@ -14,9 +19,11 @@
           <div class="text-secondary">{{ current_user.email }}</div>
         </div>
         <div class="col-md-7 ">
+            <!--Ebenfalls wird ein Button angezeigt, der zu einer Liste der Bestellungen des Users führt-->
             <div class="col-md-3 distance2">
                 <a href="{{url_for('users.orderhistory')}}" class="btn btn-secondary btn-sm distance2">Meine Bestellungen</a>
             </div>
+            <!--Es wird auch ein Button angezeigt, der zu einer Übersicht von allen Posts des Users führt-->
             <div>
                 <a href="{{ url_for('users.user_posts', username=current_user.username) }}" class="btn btn-secondary btn-sm ">Meine Kommentare</a>
             </div>       
@@ -27,10 +34,12 @@
         <form method="POST" action="" enctype="multipart/form-data">
             {{ form.hidden_tag() }}
             <fieldset class="form-group distance2">
+                <!--Im folgenden werden die benutzerbezogenen Daten angezeigt, welche bei der Registrierung eingegeben wurden-->
                 <legend class="border-bottom mb-4">Benutzerprofil</legend>
                 <div class="row">
                     <div class="col-md-1"></div>
                     <div class="col-md-5">
+                        <!--Eingabefeld für den Vornamen des Benutzer wird erstellt-->
                         <div class="form-group distance2">
                             {{ form.firstname.label(class="form-control-label") }}
 
@@ -45,6 +54,7 @@
                                 {{ form.firstname(class="form-control form-control-lg") }}
                             {% endif %}
                         </div>
+                        <!--Eingabefeld für die E-Mail des Benutzer wird erstellt-->
                         <div class="form-group distance2">
                             {{ form.email.label(class="form-control-label") }}
                             {% if form.email.errors %}
@@ -59,6 +69,7 @@
                             {% endif %}
                         </div>
                     </div>
+                    <!--Eingabefeld für den Nachnamen des Benutzer wird erstellt-->
                     <div class="col-md-5">
                         <div class="form-group distance2">
                             {{ form.lastname.label(class="form-control-label") }}
@@ -74,6 +85,7 @@
                                 {{ form.lastname(class="form-control form-control-lg") }}
                             {% endif %}
                         </div>
+                        <!--Eingabefeld für den Benutzernamen des Benutzer wird erstellt-->
                         <div class="form-group distance2">
                             {{ form.username.label(class="form-control-label") }}
 
@@ -90,10 +102,13 @@
                         </div>
                     </div>
                 </div>
+                <!--Bis hier wurden alle Felder untereinander aufgelistet-->
+                <!--Ab hier wird in eine neue Spalte auf der Seite gesprungen-->
                 <legend class="border-bottom mb-4 distance2"></legend>
                 <div class="row">
                     <div class="col-md-1"></div>
                     <div class="col-md-5">
+                        <!--Eingabefeld für das Land des Benutzer wird erstellt-->
                         <div class="form-group">
                             {{ form.country.label(class="form-control-label") }}
                             {% if form.country.errors %}
@@ -107,6 +122,7 @@
                                 {{ form.country(class="form-control form-control-lg") }}
                             {% endif %}
                         </div>
+                        <!--Eingabefeld für die Postleitzahl des Benutzer wird erstellt-->
                         <div class="form-group distance2">
                             {{ form.zipcode.label(class="form-control-label") }}
                             {% if form.zipcode.errors %}
@@ -120,6 +136,7 @@
                                 {{ form.zipcode(class="form-control form-control-lg") }}
                             {% endif %}
                         </div>
+                        <!--Eingabefeld für die Adresse des Benutzer wird erstellt-->
                         <div class="form-group distance2">
                             {{ form.address.label(class="form-control-label") }}
                             {% if form.address.errors %}
@@ -134,6 +151,7 @@
                             {% endif %}
                         </div>
                     </div>
+                    <!--Eingabefeld für das Bundesland des Benutzer wird erstellt-->
                     <div class="col-md-5">
                         <div class="form-group">
                             {{ form.state.label(class="form-control-label") }}
@@ -148,6 +166,7 @@
                                 {{ form.state(class="form-control form-control-lg") }}
                             {% endif %}
                         </div>
+                        <!--Eingabefeld für die Stadt des Benutzer wird erstellt-->
                         <div class="form-group distance2">
                             {{ form.city.label(class="form-control-label") }}
                             {% if form.city.errors %}
@@ -161,6 +180,7 @@
                                 {{ form.city(class="form-control form-control-lg") }}
                             {% endif %}
                         </div>
+                        <!--Eingabefeld für die Telefonnummer des Benutzer wird erstellt-->
                         <div class="form-group distance2">
                             {{ form.contact.label(class="form-control-label") }}
                             {% if form.contact.errors %}
@@ -176,6 +196,7 @@
                         </div>
                     </div>
                 </div>
+                <!--An dieser Stelle wird eingefügt, dass ein Profilbild zu dem Konto hinzugefügt werden kann-->
                 <div class="row">
                     <div class="col-md-1"></div>
                     <div class="col-md-2">
@@ -191,6 +212,7 @@
                         
                     </div>
                 </div>
+                <!--Hier wird der Submitbutton für das Benutzerkonto eingefügt-->
                 <div class="row">
                     <div class="col-md-1"></div>
                     <div class="col-md-2">

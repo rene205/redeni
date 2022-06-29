@@ -1,17 +1,23 @@
+<!----------------Bearbeitet von René Aumann---------------->
+
 {% extends "layout.html" %}
 {% block content %}
 
+<!--Diese Seite zeigt das Formular an, wo ein Kommentar erstellt werden kann-->
 <div class="container-lg my-4">
     {% include '_messages.html' %}
+    <!--An dieser Stelle wird das Formular zur Erstellung eines Kommentars definiert-->
     <div class="content-section">
         <form method="POST" action="">
             {{ form.hidden_tag() }}
             <fieldset class="form-group">
                 <legend class="border-bottom mb-4">{{ legend }}</legend>
+                <!--Eingabefeld für den Titel des Kommentars wird erstellt-->
                 <div class="form-group distance2">
                     {{ form.title.label(class="form-control-label") }}
                     {% if form.title.errors %}
                         {{ form.title(class="form-control form-control-lg is-invalid") }}
+                        <!--Prüfung ob das Feld richtig ausgefüllt wurde-->
                         <div class="invalid-feedback">
                             {% for error in form.title.errors %}
                                 <span>{{ error }}</span>
@@ -21,6 +27,7 @@
                         {{ form.title(class="form-control form-control-lg") }}
                     {% endif %}
                 </div>
+                <!--Eingabefeld für die Beschreibung des Kommentars wird erstellt-->
                 <div class="form-group distance2">
                     {{ form.content.label(class="form-control-label") }}
                     {% if form.content.errors %}
@@ -34,7 +41,7 @@
                         {{ form.content(class="form-control form-control-lg") }}
                     {% endif %}
                 </div>
-                
+            <!--Hier wird der Button zum veröffentlichen des Kommentars eingefügt-->
             </fieldset>
             <div class="form-group distance2">
                 {{ form.submit(class="btn btn-outline-info") }}
